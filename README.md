@@ -2,17 +2,18 @@
 
 Obüs atış esası hesaplama uygulaması. Masaüstü PyQt sürümü (`atesidare.py`) ile aynı balistik tabloları kullanan **GitHub Pages PWA** arayüzü `web/` klasöründedir.
 
+**Canlı:** https://nrhtdmn.github.io/105ai/
+
 ## GitHub Pages ile yayınlama
 
-`web/` içeriğini site kökü olarak yayınlayın (önerilen):
+Bu depo GitHub Actions ile `web/` klasörünü Pages’e dağıtır (`main` dalına her push).
+
+Manuel ayar (gerekirse):
 
 1. Bu depoyu GitHub’a itin.
 2. **Settings → Pages → Build and deployment**
-3. Source: **Deploy from a branch**
-4. Branch: `main` (veya kullandığınız dal), folder: **`/web`**
-5. Kaydedin; birkaç dakika sonra `https://<kullanıcı>.github.io/<repo>/` adresinde açılır.
-
-Alternatif: yalnızca `web/` içeriğini `gh-pages` dalının köküne kopyalayın.
+3. Source: **GitHub Actions** (veya Deploy from a branch → folder **`/web`**)
+4. Site: `https://nrhtdmn.github.io/105ai/`
 
 > `web/.nojekyll` Jekyll işlemesini kapatır; `_` ile başlayan yollar bozulmaz.
 
