@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#1E3A5F" />
+  <meta name="description" content="Ateş İdare — balistik atış esası hesaplama" />
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="icon" href="./icons/icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="./icons/icon.svg" />
+  <title>Ateş İdare</title>
+  <link rel="stylesheet" href="./css/app.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">
+      <img src="./icons/icon.svg" alt="" width="36" height="36" />
+      <div>
+        <h1>Ateş İdare</h1>
+        <p class="tagline" id="app-tagline">Atış esası · PWA</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <span id="sw-status" class="sw-status" title="Çevrimdışı durum">●</span>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button type="button" class="tab active" data-tab="atis" role="tab">Atış Görevi</button>
+    <button type="button" class="tab" data-tab="btsb" role="tab">Bt.Sb. Raporu</button>
+    <button type="button" class="tab" data-tab="duzeltme" role="tab">Düzeltme</button>
+    <button type="button" class="tab" data-tab="esaslar" role="tab">Esaslar</button>
+    <button type="button" class="tab" data-tab="hedefler" role="tab">Hedefler</button>
+    <button type="button" class="tab" data-tab="ayarlar" role="tab">Ayarlar</button>
+  </nav>
+
+  <main class="main">
+    <!-- Atış Görevi -->
+    <section id="tab-atis" class="panel active" role="tabpanel">
+      <div class="grid-2">
+        <div class="card">
+          <h2>Hedef</h2>
+          <div class="form-grid">
+            <label>Bölge no <input id="hedef-bolge-nu" type="text" value="37" /></label>
+            <label>Bölge <input id="hedef-bolge-sayisi" type="text" value="SFA" /></label>
+            <label>Sağ <input id="hedef-sag" type="number" inputmode="numeric" placeholder="sağ" /></label>
+            <label>Yukarı <input id="hedef-yukari" type="number" inputmode="numeric" placeholder="yukarı" /></label>
+            <label class="rakim-label">Rakım (m)
+              <span class="inline-field">
+                <input id="hedef-rakim" type="number" inputmode="numeric" />
+                <button type="button" class="btn ghost btn-sm" id="btn-rakim-al" title="İnternetten rakım al">Rakım al</button>
+              </span>
+            </label>
+            <label>Paralanma yük. <input id="paralanma" type="number" value="0" /></label>
+          </div>
+        </div>
+        <div class="card">
+          <h2>Muhimmat / Metro</h2>
+          <div class="form-grid">
+            <label>Barut hakkı
+              <select id="barut-hakki">
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+              </select>
+            </label>
+            <label>Önerilen <input id="barut-oner" type="text" readonly /></label>
+            <label>Barut ısısı (°F) <input id="barut-isisi" type="number" value="75" step="1" /></label>
+            <label>Mermi tip
+              <select id="mermi-tip">
+                <option value="TD">TD</option>
+                <option value="HS">HS</option>
+              </select>
+            </label>
+            <label>Kare ağırlık <input id="kare-agirlik" type="number" value="2" step="0.1" /></label>
+            <label>METRAP
+              <input id="metro-file" type="file" accept=".txt,text/plain" />
+            </label>
+          </div>
+          <p class="hint" id="metro-label">Varsayılan METRAP yüklenecek…</p>
+          <p class="hint">Yüklediğiniz METRAP, yenisini seçene veya varsayılana dönene kadar saklanır.</p>
+          <div class="btn-row">
+            <button type="button" class="btn secondary" id="btn-oner">Barut hakkı öner</button>
+            <button type="button" class="btn primary" id="btn-hesapla">HESAPLA</button>
+          </div>
+          <p class="error" id="calc-error" hidden></p>
+        </div>
+      </div>
+
+      <div class="card mission-card">
+        <h2>Görev / top seçimi</h2>
+        <div class="form-grid">
+          <label>Atış topu
+            <select id="secili-top">
+              <option value="1A">1A</option>
+              <option value="1B" selected>1B</option>
+              <option value="1C">1C</option>
+              <option value="1D">1D</option>
+              <option value="2A">2A</option>
+              <option value="2B">2B</option>
+              <option value="2C">2C</option>
+              <option value="2D">2D</option>
+            </select>
+          </label>
+          <label>Topçu <input id="topcu" type="text" placeholder="Ad / çağrı" autocomplete="name" /></label>
+          <label>Müşterek yan
+            <input id="musterek-yan" type="number" value="2600" step="1" />
+          </label>
+          <label>Yan bandı (otomatik)
+            <input id="yan-bandi" type="text" readonly value="2200 – 3000" />
+          </label>
+          <label>Sol hudut (mil)
+            <input id="sol-hudut" type="number" inputmode="numeric" placeholder="örn. 1800" min="0" max="6399" />
+          </label>
+          <label>Sağ hudut (mil)
+            <input id="sag-hudut" type="number" inputmode="numeric" placeholder="örn. 3400" min="0" max="6399" />
+          </label>
+        </div>
+        <p class="hint" id="hudut-hint">Sol / sağ hudut boşsa sınır kontrolü yapılmaz. Değerler tarayıcıda saklanır.</p>
+        <p class="hint" id="mission-hint">Müşterek yan ±400 bandındaki toplar vurgulanır. Kart veya listeden top seçin.</p>
+        <div class="btn-row">
+          <button type="button" class="btn fire" id="btn-atildi" disabled>ATILDI</button>
+          <button type="button" class="btn secondary" id="btn-gorev-bitir" disabled>Görevi bitir</button>
+        </div>
+        <div class="shot-log-wrap">
+          <h3 class="subhead">Atış kayıtları (bu görev)</h3>
+          <table class="shot-table" id="shot-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Saat</th>
+                <th>Top</th>
+                <th>Topçu</th>
+                <th>Yan</th>
+                <th>Yükseliş</th>
+                <th>BH</th>
+                <th>Tapa</th>
+              </tr>
+            </thead>
+            <tbody id="shot-tbody">
+              <tr class="empty"><td colspan="8">Henüz atış yok</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <h2 class="section-title">Obüs sonuçları <span class="hint-inline" id="band-legend"></span></h2>
+      <div class="gun-grid" id="gun-results"></div>
+    </section>
+
+    <!-- Bt.Sb. Raporu -->
+    <section id="tab-btsb" class="panel" role="tabpanel" hidden>
+      <div class="card">
+        <div class="btn-row">
+          <button type="button" class="btn secondary" id="btn-mevzi-kaydet">Mevzileri kaydet</button>
+          <button type="button" class="btn ghost" id="btn-mevzi-sifirla">Varsayılana dön</button>
+          <button type="button" class="btn ghost" id="btn-metro-default">Varsayılan METRAP</button>
+        </div>
+        <p class="hint">Mevzi değerleri tarayıcıda saklanır (localStorage).</p>
+      </div>
+      <div class="mevzi-grid" id="mevzi-forms"></div>
+    </section>
+
+    <!-- Düzeltme -->
+    <section id="tab-duzeltme" class="panel" role="tabpanel" hidden>
+      <div class="card">
+        <p class="mission-banner">Seçili top: <strong id="dzl-top-label">—</strong>
+          · Topçu: <strong id="dzl-topcu-label">—</strong>
+          · Band: <strong id="dzl-band-label">—</strong></p>
+      </div>
+      <div class="grid-3">
+        <div class="card">
+          <h2>Atış esasları</h2>
+          <dl class="kpi-list">
+            <div><dt>Yan</dt><dd id="dzl-yan">—</dd></div>
+            <div><dt>Yükseliş</dt><dd id="dzl-yukselis">—</dd></div>
+            <div><dt>Barut hakkı</dt><dd id="dzl-barut">—</dd></div>
+            <div><dt>Tapa sn</dt><dd id="dzl-tapa">—</dd></div>
+          </dl>
+        </div>
+        <div class="card">
+          <h2>Gözlemci düzeltmeleri</h2>
+          <div class="pad-grid">
+            <label>Sola <input id="dzl-sola" type="number" value="0" /></label>
+            <label>Sağa <input id="dzl-saga" type="number" value="0" /></label>
+            <label>Uzat <input id="dzl-uzat" type="number" value="0" /></label>
+            <label>Kısalt <input id="dzl-kisalt" type="number" value="0" /></label>
+            <label>Kaldır <input id="dzl-kaldir" type="number" value="0" /></label>
+            <label>İndir <input id="dzl-indir" type="number" value="0" /></label>
+          </div>
+          <div class="btn-row">
+            <button type="button" class="btn primary" id="btn-dzl-hesapla">Uygula</button>
+            <button type="button" class="btn ghost" id="btn-dzl-temizle">Temizle</button>
+          </div>
+        </div>
+        <div class="card">
+          <h2>Echo</h2>
+          <dl class="kpi-list">
+            <div><dt>Mesafe</dt><dd id="dzl-mesafe">—</dd></div>
+            <div><dt>1 mil değişim</dt><dd id="dzl-birmil">—</dd></div>
+            <div><dt>100 m</dt><dd id="dzl-yuzm">—</dd></div>
+          </dl>
+        </div>
+      </div>
+      <div class="card">
+        <div class="btn-row">
+          <button type="button" class="btn secondary" id="btn-gorev-bitir-dzl">Görevi bitir</button>
+        </div>
+        <p class="hint">Kaydeder, Atış Görevi’ne döner ve formu sıfırlar.</p>
+      </div>
+    </section>
+
+    <!-- Esaslar -->
+    <section id="tab-esaslar" class="panel" role="tabpanel" hidden>
+      <div class="card">
+        <h2>Hesap özeti (1. grup / 1B)</h2>
+        <div class="kpi-grid" id="esaslar-grid"></div>
+      </div>
+    </section>
+
+    <!-- Hedefler -->
+    <section id="tab-hedefler" class="panel" role="tabpanel" hidden>
+      <div class="card">
+        <h2>Hedef listesi</h2>
+        <div class="form-grid" id="hedef-form">
+          <label>İsim <input id="hl-isim" type="text" placeholder="örn. Hill 412" /></label>
+          <label>Bölge no <input id="hl-bolge-nu" type="text" value="37" /></label>
+          <label>Bölge <input id="hl-bolge-sayisi" type="text" value="SFA" /></label>
+          <label>Sağ <input id="hl-sag" type="number" /></label>
+          <label>Yukarı <input id="hl-yukari" type="number" /></label>
+          <label class="rakim-label">Rakım (m)
+            <span class="inline-field">
+              <input id="hl-rakim" type="number" />
+              <button type="button" class="btn ghost btn-sm" id="btn-hl-rakim">Rakım al</button>
+            </span>
+          </label>
+          <label>Not <input id="hl-not" type="text" placeholder="isteğe bağlı" /></label>
+        </div>
+        <div class="btn-row">
+          <button type="button" class="btn primary" id="btn-hl-kaydet">Listeye ekle</button>
+          <button type="button" class="btn ghost" id="btn-hl-iptal" hidden>Düzenlemeyi iptal</button>
+          <button type="button" class="btn secondary" id="btn-hl-mevcut">Atış görevinden al</button>
+          <button type="button" class="btn secondary" id="btn-hl-toplu">Tüm hedeflere hesapla → Excel</button>
+        </div>
+        <p class="hint" id="hl-status">🔥 = atış görevine yükle · ✎ = düzenle · ✕ = sil</p>
+        <p class="error" id="hl-error" hidden></p>
+        <ul class="target-list" id="hedef-listesi"></ul>
+      </div>
+      <div class="card">
+        <h2>Bitmiş görevler</h2>
+        <ul class="target-list" id="gorev-listesi"></ul>
+      </div>
+    </section>
+
+    <!-- Ayarlar -->
+    <section id="tab-ayarlar" class="panel" role="tabpanel" hidden>
+      <div class="grid-2">
+        <div class="card">
+          <h2>Silah / sistem</h2>
+          <div class="form-grid">
+            <label>Silah
+              <select id="ay-silah">
+                <option value="obus_bh567">Obüs — Barut hakkı 5 / 6 / 7</option>
+              </select>
+            </label>
+            <label>Birlik / batarya adı
+              <input id="ay-birlik" type="text" placeholder="örn. 1. Bt." />
+            </label>
+            <label>Varsayılan mermi tip
+              <select id="ay-mermi">
+                <option value="TD">TD</option>
+                <option value="HS">HS</option>
+              </select>
+            </label>
+            <label>Varsayılan barut ısısı (°F)
+              <input id="ay-barut-isisi" type="number" value="75" step="1" />
+            </label>
+            <label>Varsayılan kare ağırlık
+              <input id="ay-kare" type="number" value="2" step="0.1" />
+            </label>
+          </div>
+          <p class="hint" id="ay-silah-hint">Seçilen silaha göre balistik kütüphaneler kullanılır.</p>
+        </div>
+        <div class="card">
+          <h2>Batarya / hudut</h2>
+          <div class="form-grid">
+            <label>Varsayılan bölge no <input id="ay-bolge-nu" type="text" value="37" /></label>
+            <label>Varsayılan bölge <input id="ay-bolge-sayisi" type="text" value="SFA" /></label>
+            <label>Müşterek yan (varsayılan)
+              <input id="ay-musterek" type="number" value="2600" step="1" />
+            </label>
+            <label>Yan bandı ± (mil)
+              <input id="ay-band-half" type="number" value="400" step="50" min="100" max="1600" />
+            </label>
+            <label>Sol hudut (mil)
+              <input id="ay-sol-hudut" type="number" inputmode="numeric" placeholder="örn. 1800" />
+            </label>
+            <label>Sağ hudut (mil)
+              <input id="ay-sag-hudut" type="number" inputmode="numeric" placeholder="örn. 3400" />
+            </label>
+          </div>
+          <p class="hint">Hudut ve band değerleri Atış Görevi ile senkron tutulur.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Aktif toplar</h2>
+        <p class="hint">Kapalı toplar sonuç listesinde ve seçimde gizlenir. Hesap için 1B / 2B referansları açık kalmalıdır.</p>
+        <div class="gun-toggle-grid" id="ay-aktif-toplar"></div>
+      </div>
+
+      <div class="card">
+        <h2>METRAP</h2>
+        <p class="hint" id="ay-metro-label">—</p>
+        <div class="form-grid">
+          <label>METRAP dosyası
+            <input id="ay-metro-file" type="file" accept=".txt,text/plain" />
+          </label>
+        </div>
+        <div class="btn-row">
+          <button type="button" class="btn ghost" id="ay-metro-default">Varsayılan METRAP</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="btn-row">
+          <button type="button" class="btn primary" id="btn-ay-kaydet">Ayarları kaydet</button>
+          <button type="button" class="btn ghost" id="btn-ay-sifirla">Varsayılan ayarlar</button>
+        </div>
+        <p class="hint" id="ay-status">Ayarlar tarayıcıda saklanır.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <span>Ateş İdare PWA · veriler <code>data/</code> klasöründen</span>
+  </footer>
+
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Ateş İdare">
+  <rect width="128" height="128" rx="16" fill="#1E3A5F"/>
+  <circle cx="64" cy="64" r="38" fill="none" stroke="#E6EAEF" stroke-width="4"/>
+  <circle cx="64" cy="64" r="8" fill="#C45C26"/>
+  <path d="M64 18 V40 M64 88 V110 M18 64 H40 M88 64 H110" stroke="#E6EAEF" stroke-width="4" stroke-linecap="round"/>
+  <path d="M40 96 L64 48 L88 96 Z" fill="none" stroke="#8EB4D8" stroke-width="3" stroke-linejoin="round"/>
+</svg>

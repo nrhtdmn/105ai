@@ -1,0 +1,20 @@
+{
+  "name": "Ateş İdare",
+  "short_name": "Ateş İdare",
+  "description": "Obüs atış esası hesaplama uygulaması",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#E6EAEF",
+  "theme_color": "#1E3A5F",
+  "lang": "tr",
+  "icons": [
+    {
+      "src": "./icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
